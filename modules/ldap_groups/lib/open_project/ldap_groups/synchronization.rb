@@ -79,11 +79,9 @@ module OpenProject::LdapGroups
       # memberOf filter to identifiy member entries of the group
       memberof_filter = Net::LDAP::Filter.eq('memberOf', group.dn)
 
-      # TODO add ldap filter
-
       users = {}
       ldap_con.search(base: base_dn,
-                      filter: memberof_filter,
+                      filter: ldap.default_filter & memberof_filter,
                       attributes: ldap.search_attributes) do |entry|
         data = ldap.get_user_attributes_from_ldap_entry(entry)
         users[data[:login]] = data.except(:dn)
